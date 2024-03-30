@@ -1,37 +1,42 @@
 import { authSchema } from "../validators/auth.validator";
 import { responseStatus } from "../types/enums";
 import { Request, Response } from "express";
-import { create } from "../services/auth.service";
+import { creatNewUser, loginUser } from "../services/auth.service";
 
 export const signIn = async (req: Request, res: Response) => {
   try {
     const parsedState = authSchema.safeParse(req.body);
     const parsedInput = authSchema.parse(req.body);
     if (parsedState.success) {
-      const createNewUser = await create(parsedInput);
-      res.status(responseStatus.Created).send(createNewUser);
+      const serviceRes = await creatNewUser(parsedInput);
+      res.status(responseStatus.Created).send(serviceRes);
     } else {
-      res.status(responseStatus.Unauthorized).send({ msg: "in else" });
+      res.status(responseStatus.Unauthorized).send({
+        msg: "Wrong input the email should be type email and password should be type string",
+      });
     }
   } catch {
-    res.status(responseStatus.Forbidden).send({ msg: "in catch" });
+    res
+      .status(responseStatus.InternalServerError)
+      .send({ msg: "Error Processing Request" });
   }
 };
 
-export const logIn = (req: Request, res: Response) => {
+export const logIn = async (req: Request, res: Response) => {
   try {
     const parsedState = authSchema.safeParse(req.body);
     const parsedInput = authSchema.parse(req.body);
     if (parsedState.success) {
-      res.status(responseStatus.Accepted).send(parsedInput);
+      const serviceRes = await loginUser(parsedInput);
+      res.status(responseStatus.Found).send({ msg: serviceRes });
     } else {
       res
         .status(responseStatus.Unauthorized)
         .json({ msg: "Error parsing the Input, wrong data" });
     }
   } catch {
-    res
-      .status(responseStatus.Forbidden)
-      .json({ msg: "Error parsing the Input" });
+    res.status(responseStatus.Forbidden).json({
+      msg: "Wrong input the email should be type email and password should be type string",
+    });
   }
 };
