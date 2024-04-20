@@ -18,17 +18,20 @@ export const signIn = async (req: Request, res: Response) => {
   } catch {
     res
       .status(responseStatus.InternalServerError)
-      .send({ msg: "Error Processing Request" });
+      .send({ msg: "Error Processing Request, User already exists, Please login" });
   }
 };
 
 export const logIn = async (req: Request, res: Response) => {
   try {
+    // let token = req.headers['authorization']|| "";
+    // token = token.split(" ")[1];
+    // req["token"] = token;
     const parsedState = authSchema.safeParse(req.body);
     const parsedInput = authSchema.parse(req.body);
     if (parsedState.success) {
       const serviceRes = await loginUser(parsedInput);
-      res.status(responseStatus.Found).send({ msg: serviceRes });
+      res.status(responseStatus.Found).send(serviceRes);
     } else {
       res
         .status(responseStatus.Unauthorized)
