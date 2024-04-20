@@ -1,9 +1,12 @@
 import bcrypt from "bcrypt";
 const saltrounds = 10;
 
-export const hashpassword = (textpass: string) => {
+export const hashPassword = (textPass: string) => {
   return bcrypt
-    .hash(textpass, saltrounds)
+    .hash(textPass, saltrounds)
     .then((hash: string) => hash)
-    .catch((err: Error) => err);
 };
+
+export const cmpHash = (textPass: string, hashedPass: string) => {
+  return bcrypt.compare(textPass,hashedPass).then((found) => found);
+}

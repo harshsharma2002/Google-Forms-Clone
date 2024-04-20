@@ -6,5 +6,5 @@ export enum responseStatus {
   Unauthorized = 401,
   Forbidden = 402,
   NotFound = 404,
+  InternalServerError = 500,
 }
-

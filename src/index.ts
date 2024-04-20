@@ -6,9 +6,6 @@ import baseRouter from "./router";
 import { responseStatus } from "./types/enums";
 import initializeENV from "./envloader";
 initializeENV();
-import knex from "./db/knex";
-import { Model } from "objection";
-Model.knex(knex);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
